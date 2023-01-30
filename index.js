@@ -8,20 +8,19 @@ const messagingSid = process.env.MESSAGING_SERVICE_SID;
 const client = require('twilio')(accountSid, authToken);
 const errorData = require('./error');
 app.use(cors());
-
+app.use(express.json());
 app.get('/', (req, res) => {
 	res.status(200).json({ message: 'server is working' });
 });
 
-app.get('/sendmessage', async (req, res) => {
+app.post('/sendmessage', async (req, res) => {
 	try {
-		const message = 'waah bete waah moj kr di ';
-		const sendTo = +919627944998;
+		const { message, sendTo } = req.body;
 
 		const data = await client.messages.create({
 			body: message,
 			messagingServiceSid: messagingSid,
-			to: sendTo
+			to: `+${sendTo}`
 		});
 
 		res.status(200).json(data);
